@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="UtopiaModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="UtopiaModelStoreContainer">
+    <EntitySet Name="Uto_Attachment" EntityType="UtopiaModel.Store.Uto_Attachment" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Uto_Comment" EntityType="UtopiaModel.Store.Uto_Comment" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Uto_Message" EntityType="UtopiaModel.Store.Uto_Message" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Uto_Microblog" EntityType="UtopiaModel.Store.Uto_Microblog" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Uto_User" EntityType="UtopiaModel.Store.Uto_User" store:Type="Tables" Schema="dbo" />
+  </EntityContainer>
+  <EntityType Name="Uto_Attachment">
+    <Key>
+      <PropertyRef Name="AttachmentId" />
+    </Key>
+    <Property Name="AttachmentId" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Type" Type="nvarchar" Nullable="false" MaxLength="20" />
+    <Property Name="UserId" Type="bigint" Nullable="false" />
+    <Property Name="Url" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="BelongId" Type="bigint" Nullable="false" />
+    <Property Name="DateCreated" Type="datetime" />
+    <Property Name="Width" Type="int" />
+    <Property Name="Height" Type="int" />
+  </EntityType>
+  <EntityType Name="Uto_Comment">
+    <Key>
+      <PropertyRef Name="CommentId" />
+    </Key>
+    <Property Name="CommentId" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Body" Type="nvarchar" Nullable="false" MaxLength="140" />
+    <Property Name="UserId" Type="bigint" Nullable="false" />
+    <Property Name="SendUserId" Type="bigint" Nullable="false" />
+    <Property Name="Type" Type="nchar" Nullable="false" MaxLength="20" />
+    <Property Name="DateCreated" Type="datetime" Nullable="false" />
+    <Property Name="BelongId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Uto_Message">
+    <Key>
+      <PropertyRef Name="MessageId" />
+    </Key>
+    <Property Name="MessageId" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Type" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="IsIgnore" Type="bit" Nullable="false" />
+    <Property Name="DateCreated" Type="datetime" Nullable="false" />
+    <Property Name="BelongId" Type="bigint" Nullable="false" />
+    <Property Name="UserId" Type="bigint" Nullable="false" />
+    <Property Name="SendUserId" Type="bigint" Nullable="false" />
+    <Property Name="ChildrenBelongId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Uto_Microblog">
+    <Key>
+      <PropertyRef Name="MicroblogId" />
+    </Key>
+    <Property Name="MicroblogId" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="bigint" Nullable="false" />
+    <Property Name="Body" Type="nvarchar" Nullable="false" MaxLength="160" />
+    <Property Name="DateCreated" Type="datetime" Nullable="false" />
+    <Property Name="RepeatId" Type="bigint" Nullable="false" />
+    <Property Name="AttachmentId" Type="bigint" Nullable="false" />
+    <Property Name="CommentCount" Type="bigint" Nullable="false" />
+    <Property Name="RepeatContent" Type="nvarchar(max)" />
+    <Property Name="RepeatCount" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Uto_User">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Email" Type="nvarchar" Nullable="false" MaxLength="45" />
+    <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="35" />
+    <Property Name="Username" Type="nvarchar" Nullable="false" MaxLength="25" />
+    <Property Name="Sex" Type="nchar" Nullable="false" MaxLength="2" />
+    <Property Name="DateCreated" Type="datetime" />
+    <Property Name="IsActivity" Type="nchar" Nullable="false" MaxLength="2" />
+    <Property Name="ActivityCode" Type="nvarchar" MaxLength="45" />
+  </EntityType>
+</Schema>

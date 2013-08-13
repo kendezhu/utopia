@@ -1,0 +1,234 @@
+﻿@using Utopia;
+@model List<Uto_Comment>
+@{
+    string emotion = ViewBag.Emotion;
+    long belongId = ViewBag.belongId;
+    long userId = ViewBag.userId;
+    int commentCount = (int)ViewBag.commentCount;
+    string type = ViewBag.type;
+    bool all = ViewBag.all;
+    long currentUserId = UserContext.CurrentUser.UserId;
+}
+<div style="padding-top: 5px;" id="commentDivId">
+<div style="padding: 8px; margin-bottom: 25px;" class="well comment-Div">
+    <textarea class="comment-textarea" style="width: 98.3%;" rows="2"></textarea>
+    <img style="cursor:pointer; margin-right:60px;" class="comment-emotion" title="插入表情" src="../../Content/Emotion/dx.gif" data-toggle="popover" data-placement="bottom" data-html="true" data-content="@Html.Raw(emotion)"/>
+    <a url="@Utopia.UrlHelper.Instance().AddComment(belongId, userId, type)" successUrl="@Utopia.UrlHelper.Instance()._Comment(belongId, userId, type,all)" class="button button-flat-primary pull-right commentA">
+        评论</a>
+    <ul style="list-style-type:none;">
+        @foreach (var comment in Model)
+        {
+            <li style=" padding-top:20px; padding-bottom:20px; border-bottom:1px solid #E5E5E5;width:100%;">
+                <table style="width:100%;">
+                <tr>
+                <td style="height: 100%; width:5%;vertical-align: top;">
+                 <img class="img-rounded" src="http://tp1.sinaimg.cn/1834443804/180/5608970101/1"
+                    width="30" height="30" alt="乌托邦">
+                </td>
+                <td style="height: 100%; width:95%;word-break:break-all;word-wrap:break-word;">
+                 <span style="font-weight:900;">@comment.SendUser().Username:</span>
+                 @Html.Raw(comment.Body) (@comment.DateCreated.FriendlyTime())
+                </td>
+                </tr>
+                <tr>
+                <td style="width:0%"></td>
+                <td style="width:100%">
+                 <span class="pull-right">
+                 <input class="comment-userName-hidden" type="hidden" value="@comment.SendUser().Username" />
+                <a class="muted commentViceHuifuA" href="#" style="font-size:small;">回复</a>
+                @if (currentUserId==comment.SendUserId)
+                {
+                 <a class="muted commentDeleteA" url="@Utopia.UrlHelper.Instance().DeleteComment(comment.CommentId)" style="font-size:small; cursor:pointer;">删除</a>   
+                }
+                </span>
+                </td>
+                </tr>
+                <tr class="commentHideTr" style="display:none">
+                <td style="width:0%"></td>
+                 <td style="width:100%">
+                 <textarea class="comment-textarea" style="width: 98.3%;" rows="1"></textarea>
+                 <img style="cursor:pointer; margin-right:60px;" class="comment-emotion" title="插入表情" src="../../Content/Emotion/dx.gif" data-toggle="popover" data-placement="bottom" data-html="true" data-content="@Html.Raw(emotion)"/>
+                  <a url="@Utopia.UrlHelper.Instance().AddComment(belongId,comment.SendUserId, type)" successUrl="@Utopia.UrlHelper.Instance()._Comment(belongId, userId, type,all)" class="btn pull-right commentViceA">
+        评论</a>
+                 </td>
+                </tr>
+                </table>
+            </li>
+        }
+        @if (commentCount>10&&all==false)
+        {
+          <li style="padding-top:10px;text-align:center;">
+            <a href="@Utopia.UrlHelper.Instance().ChannelMicroblogDetail(belongId)">查看更多评论</a>
+          </li>   
+        }
+        @if (commentCount>10&&all==true)
+        {
+            List<string> paramNames=new List<string>();
+            paramNames.Add("belongId");
+            paramNames.Add("userId");
+            paramNames.Add("type");
+            paramNames.Add("all");
+            List<object> paramValues=new List<object>();
+            paramValues.Add(belongId);
+            paramValues.Add(userId);
+            paramValues.Add(type);
+            paramValues.Add(all);
+            @Html.Pagination("_Comment", "Channel", commentCount, 10, ajaxTarget: "commentDivId",paramNames:paramNames,paramValues:paramValues)
+        }
+    </ul>
+</div>
+</div>
+<script>
+    $(function () {
+        //表情气泡框
+        $('.comment-emotion').popover();
+
+        //点表情
+        $('.comment-Div').delegate(".emotionGif", "click", function () {
+            var emotionId = $(this).attr("id");
+            commentAddExpression(this, emotionId);
+
+            //处理剩余字数
+            var len = $("#wordBody").val().length;
+            var leftLen = 140 - len;
+            $("#wordNum").text(leftLen);
+        })
+
+        //点评论
+        $('.commentA').click(function () {
+            $this = $(this);
+            var commentbody = $this.parent().children(".comment-textarea").val();
+            if (commentbody.length > 140) {
+                art.dialog.tips('字数超了!', 1.5);
+                return false;
+            }
+            if (commentbody.length == 0) {
+                art.dialog.tips('字数不够!', 1.5);
+                return false;
+            }
+            var url = $this.attr("url");
+            $.post(url, { body: commentbody }, function (data) {
+                if (data == 1) {
+                    var successUrl = $this.attr("successUrl");
+                    $.get(successUrl, function (data) {
+                        $this.parent().replaceWith(data);
+                    })
+                }
+            })
+        })
+
+        //点删除
+        $(".commentDeleteA").click(function (e) {
+            e.preventDefault();
+            var $this = $(this);
+            var url = $(this).attr("url");
+            art.dialog({
+                lock: true,
+                fixed: true,
+                content: '你确定要删除此回复吗？',
+                ok: function () {
+                    $.post(url, function (data) {
+                        if (data == 1) {
+                            $this.parent().parent().parent().parent().parent().parent().slideUp(600);
+                        }
+                        else {
+                            art.dialog.tips('删除失败，请确定你是否有此权限!', 5);
+                        }
+                    })
+                },
+                cancelVal: '取消',
+                cancel: true //为true等价于function(){}
+            });
+        })
+
+        //点回复
+        $(".commentViceHuifuA").click(function (e) {
+            e.preventDefault();
+            var $this = $(this);
+            var replayName = "回复" + $this.prev(".comment-userName-hidden").val() + ":";
+            var textArea = $this.parent().parent().parent().next().find(".comment-textarea");
+            textArea.val(replayName);
+            var tr = $this.parent().parent().parent().next();
+            if (tr.hasClass("commentHideTr")) {
+                tr.fadeIn(1000);
+                toEnd(textArea);
+                tr.removeClass("commentHideTr");
+            } else {
+                tr.fadeOut(500);
+                tr.addClass("commentHideTr");
+            }
+        })
+
+        //点回复下的评论
+        $(".commentViceA").click(function (e) {
+            e.preventDefault();
+            var $this = $(this);
+            var commentbody = $this.parent().children(".comment-textarea").val();
+            if (commentbody.length > 140) {
+                art.dialog.tips('字数超了!', 1.5);
+                return false;
+            }
+            if (commentbody.length == 0) {
+                art.dialog.tips('字数不够!', 1.5);
+                return false;
+            }
+            var url = $this.attr("url");
+            $.post(url, { body: commentbody }, function (data) {
+                if (data == 1) {
+                    var successUrl = $this.attr("successUrl");
+                    $.get(successUrl, function (data) {
+                        $this.parent().parent().parent().parent().parent().parent().parent().replaceWith(data);
+                    })
+                }
+            })
+        })
+
+    })
+
+    // 在光标处插入图片字符JS
+    // http://www.xiaophper.com/?p=150
+    function commentAddExpression(myField, myValue) {
+        myField = $(myField).parent().parent().parent().parent().parent().children("textarea")[0];
+        //IE
+        if (document.selection) {
+            myField.focus();
+            sel = document.selection.createRange();
+            myValue = "[" + myValue + "]";
+            sel.text = myValue;
+            sel.select();
+        }
+        //MOZILLA
+        else if (myField.selectionStart || myField.selectionStart == '0') {
+            var startPos = myField.selectionStart;
+            var endPos = myField.selectionEnd;
+            // save scrollTop before insert
+            var restoreTop = myField.scrollTop;
+            myValue = "[" + myValue + "]";
+            myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
+            if (restoreTop > 0) {
+                // restore previous scrollTop
+                myField.scrollTop = restoreTop;
+            }
+            myField.focus();
+            myField.selectionStart = startPos + myValue.length;
+            myField.selectionEnd = startPos + myValue.length;
+        }
+        else {
+            myField.value += myValue;
+            myField.focus();
+        }
+    }
+    //将光标定位到现有文字的最后
+    // http://abc-xiao1016.blog.sohu.com/160754822.html
+    function toEnd(textArea) {
+        if (document.selection) {//IE浏览器
+            var range = textArea[0].createTextRange();
+            range.moveStart("character", textArea[0].value.length);
+            range.collapse(true);
+            range.select();
+        } else {//非IE浏览器
+            textArea[0].setSelectionRange(textArea[0].value.length, textArea[0].value.length);
+            textArea[0].focus();
+        }
+    }
+</script>

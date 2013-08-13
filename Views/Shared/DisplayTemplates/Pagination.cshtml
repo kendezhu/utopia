@@ -1,0 +1,62 @@
+﻿@{
+    string actionName = ViewData["actionName"].ToString();
+    string controllerName = ViewData["controllerName"].ToString();
+    string paginationLarge = ViewData["paginationLarge"].ToString();
+    string paginationCentered = ViewData["paginationCentered"].ToString();
+    string ajaxTarget = ViewData["ajaxTarget"].ToString();
+    int totalRecord = (int)ViewData["totalRecord"];
+    int pageSize = (int)ViewData["pageSize"];
+    int pageCount = (int)ViewData["pageCount"];
+    int pageIndex = Request.QueryString["pageIndex"] == null ? 1 : int.Parse(Request.QueryString["pageIndex"].ToString());
+    Dictionary<string, object> paramDics = (Dictionary<string, object>)ViewData["param-Name-Value"];
+    RouteValueDictionary rvd = new RouteValueDictionary();
+    foreach (var paramDic in paramDics)
+    {
+        rvd.Add(paramDic.Key, paramDic.Value);
+    }
+    rvd.Add("pageSize", pageSize);
+}
+@if (pageCount > 0)
+{
+    <div class="pagination @(paginationLarge) @(paginationCentered)">
+        <ul>
+            <li @if (pageIndex == 1){<text>class="disabled"</text>}>
+                @if (pageIndex != 1){<a href="@{rvd["pageIndex"] = pageIndex - 1;<text>@Url.Action(actionName, controllerName, rvd)</text>}">向前</a>}
+                else
+                {<span>向前</span>}
+            </li>
+            @{
+                int startIndex = pageIndex - 5; int endIndex = pageIndex + 5;
+                if (startIndex <= 0) { startIndex = 1; } if (endIndex > pageCount) { endIndex = pageCount; }
+             }
+            @for (int i = startIndex; i <= endIndex; i++)
+            {
+                <li @if (pageIndex == i){<text>class="active"</text>}>
+                    @{rvd["pageIndex"] = i;}
+                    <a href="@Url.Action(actionName, controllerName, rvd)">@i</a>
+               </li>  
+            }
+            <li @if (pageIndex == pageCount){<text>class="disabled"</text>}>
+                @if (pageIndex != pageCount){<a href="@{rvd["pageIndex"] = pageIndex + 1;<text>@Url.Action(actionName, controllerName, rvd)</text>}">往后</a>}
+                else
+                {<span>往后</span>}
+            </li>
+        </ul>
+    </div>   
+}
+
+<script type="text/javascript">
+    $(function () {
+
+        if ("@(ajaxTarget)" != "") {
+            $(".pagination li a").click(function (e) {
+                e.preventDefault();
+                url = $(this).attr("href");
+                $.post(url, function (data) {
+                   $("#@(ajaxTarget)").replaceWith(data);
+                })
+            })
+        }
+
+    })
+</script>

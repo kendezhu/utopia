@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="UtopiaModelStoreContainer" CdmEntityContainer="UtopiaEntities">
+    <EntitySetMapping Name="Uto_User">
+      <EntityTypeMapping TypeName="UtopiaModel.Uto_User">
+        <MappingFragment StoreEntitySet="Uto_User">
+          <ScalarProperty Name="ActivityCode" ColumnName="ActivityCode" />
+          <ScalarProperty Name="IsActivity" ColumnName="IsActivity" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="Sex" ColumnName="Sex" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Uto_Microblog">
+      <EntityTypeMapping TypeName="UtopiaModel.Uto_Microblog">
+        <MappingFragment StoreEntitySet="Uto_Microblog">
+          <ScalarProperty Name="RepeatCount" ColumnName="RepeatCount" />
+          <ScalarProperty Name="RepeatId" ColumnName="RepeatId" />
+          <ScalarProperty Name="RepeatContent" ColumnName="RepeatContent" />
+          <ScalarProperty Name="CommentCount" ColumnName="CommentCount" />
+          <ScalarProperty Name="AttachmentId" ColumnName="AttachmentId" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="Body" ColumnName="Body" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="MicroblogId" ColumnName="MicroblogId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Uto_Attachment">
+      <EntityTypeMapping TypeName="UtopiaModel.Uto_Attachment">
+        <MappingFragment StoreEntitySet="Uto_Attachment">
+          <ScalarProperty Name="Height" ColumnName="Height" />
+          <ScalarProperty Name="Width" ColumnName="Width" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="BelongId" ColumnName="BelongId" />
+          <ScalarProperty Name="Url" ColumnName="Url" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="AttachmentId" ColumnName="AttachmentId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Uto_Message">
+      <EntityTypeMapping TypeName="UtopiaModel.Uto_Message">
+        <MappingFragment StoreEntitySet="Uto_Message">
+          <ScalarProperty Name="ChildrenBelongId" ColumnName="ChildrenBelongId" />
+          <ScalarProperty Name="SendUserId" ColumnName="SendUserId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="BelongId" ColumnName="BelongId" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="IsIgnore" ColumnName="IsIgnore" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="MessageId" ColumnName="MessageId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Uto_Comment">
+      <EntityTypeMapping TypeName="UtopiaModel.Uto_Comment">
+        <MappingFragment StoreEntitySet="Uto_Comment">
+          <ScalarProperty Name="BelongId" ColumnName="BelongId" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="SendUserId" ColumnName="SendUserId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Body" ColumnName="Body" />
+          <ScalarProperty Name="CommentId" ColumnName="CommentId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

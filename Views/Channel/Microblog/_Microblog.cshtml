@@ -1,0 +1,87 @@
+﻿@using Utopia;
+@using Utopia.Models;
+@model Uto_Microblog
+@{
+    Uto_User currentUser = UserContext.CurrentUser;
+    Uto_User urlUser = (Uto_User)ViewData["UrlUser"];
+    }
+<div class="hero-unit well sidebar-nav" style="padding-top: 20px; padding-left: 40px; padding-right: 40px; padding-bottom: 20px;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="height: 100%; width: 10%; margin-right: 20; vertical-align: top;">
+                        <a href="#">
+                            <img class="img-rounded" src="http://tp1.sinaimg.cn/1834443804/180/5608970101/1"
+                                width="50" height="50" alt="乌托邦">
+                        </a>
+                    </td>
+                    <td class="hasImgtd" style="height: 100%; width: 90%; word-break: break-all; word-wrap: break-word;">
+                        <span class="myUserNameSpan" style="font-weight: 900;">@(Model.AsMicroblog().MicroBlogUser.Username)</span>
+                        @if(Model.RepeatId>0){<span>@Html.Raw(Model.RepeatContent)</span>}
+                        <input type="hidden" class="myUserIdHidden" value="@Model.UserId" />
+                        <input type="hidden" class="myRepeatContentHidden" value="@Model.FrontRepeatContent()" />
+                        <div class="myWordDiv">
+                        @if(Model.RepeatId>0){
+                            var oriUser=Model.AsMicroblog().OriMicroBlogUser;
+                            <a target="_blank" href="/Home/@oriUser.UserId">@oriUser.Username:</a>}
+                        @Html.Raw(Model.Body)
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div style="margin-left: 10%;">
+                @if (Model.MicroblogAttachments() != null && Model.MicroblogAttachments().Count > 0)
+                {
+                    <ul class='inline'>
+                        @foreach (var attachment in Model.MicroblogAttachments())
+                        {
+                            bool addStyle = false;
+                            string width = null;
+                            string height = null;
+                            if (attachment.Width.HasValue && attachment.Height.HasValue)
+                            {
+                                float hw = (float)attachment.Height / (float)attachment.Width;
+                                if (hw > 2)
+                                {
+                                    addStyle = true;
+                                    width = (attachment.Width / hw).Value.ToString();
+                                    height = (attachment.Height / hw).Value.ToString();
+                                }
+                                if (hw > 4)
+                                {
+                                    addStyle = true;
+                                    width = (attachment.Width / (hw * 3)).Value.ToString();
+                                    height = (attachment.Height / (hw * 3)).Value.ToString();
+                                }
+                                if (hw > 8)
+                                {
+                                    addStyle = true;
+                                    width = (attachment.Width / (hw * 4)).Value.ToString();
+                                    height = (attachment.Height / (hw * 4)).Value.ToString();
+                                }
+                            }
+                            <li>
+                                <img id="@Model.MicroblogId" class="tucaoAttachmentPic min" width="100px" style="cursor:pointer; margin-right:2px; @if (addStyle)
+                                                                                                                                                       {<text>width:@(width)px;height:@(height)px</text>}
+                                                                                                                                                       else
+                                                                                                                                                       {<text>width:100px;</text>}" src="@attachment.Url" />
+                            </li>
+                        }
+                    </ul>
+                    <img class="attachmentBig" id="attachmentBig-@Model.MicroblogId" src="" style="cursor:pointer; display:none; margin-bottom:3px; " />
+                }
+            </div>
+            <div style="margin-bottom: 40px;">
+                <span class="pull-left">
+                    @(Model.DateCreated.FriendlyTime())
+                </span>
+                 @if (currentUser.UserId == urlUser.UserId)
+                {
+                    <a style="margin-right:3px;" url="@(Utopia.UrlHelper.Instance().ChannelDeleteMyWord(Model.MicroblogId))" class="button button-flat-primary button-small pull-right deleteMyWordA">
+                        删除</a>   
+                }
+                <a repeatId="@Model.MicroblogId" style="margin-right: 3px;" class="button button-flat-primary button-small pull-right repeatMyWordA" data-toggle="modal">转发(@Model.RepeatCount)</a> 
+                <a style="margin-right: 3px;" url="@(Utopia.UrlHelper.Instance()._Comment(Model.MicroblogId, Model.UserId, "microblogComment", false))" class="button button-flat-primary button-small pull-right commentMyWordA">评论(@Model.CommentCount)</a>
+            </div>
+            <div style="display: none; padding-top: 5px;" class="commentDiv">
+            </div>
+        </div>

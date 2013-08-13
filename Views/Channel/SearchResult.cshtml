@@ -1,0 +1,40 @@
+﻿@using Utopia
+@{
+    ViewBag.Title = ViewBag.title;
+    Layout = "~/Views/Shared/_ChannelLayout2.cshtml";
+    string keyword = ViewBag.keyword;
+}
+<ul class="nav nav-tabs" id="myTab">
+  <li><a href="#searchResultDiv">吐槽</a></li>
+  <li><a href="#profile">店铺</a></li>
+  <li><a href="#messages">美食</a></li>
+  <li><a href="#settings">童年回忆</a></li>
+</ul>
+ 
+<div class="tab-content">
+  <div class="tab-pane" id="searchResultDiv"></div>
+  <div class="tab-pane" id="profile">...2</div>
+  <div class="tab-pane" id="messages">...3</div>
+  <div class="tab-pane" id="settings">...4</div>
+</div>
+
+<script>
+
+    //加载各类搜索结果局部页
+    $(function () {
+
+        //微博局部页
+        microblogUrl = '@(Utopia.UrlHelper.Instance()._SearchMicroblog(keyword))';
+        $.get(microblogUrl, function (data) {
+            $("#searchResultDiv").append(data);
+        })
+
+        //tab页
+        $("#myTab a:first").tab('show');
+        $("#myTab a").click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        })
+
+    })
+</script>

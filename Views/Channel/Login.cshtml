@@ -1,0 +1,198 @@
+﻿@using Utopia;
+@{
+    ViewBag.Title = "乌托邦";
+    Layout = null;
+}
+<link href="@Url.Content("~/Content/Bootstrap/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/Bootstrap/jquery-1.9.1.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Bootstrap/bootstrap.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<style type="text/css">
+    body
+    {
+        padding-top: 150px;
+        padding-bottom: 40px;
+        background-color: #f5f5f5;
+        background-image: url(../../Content/ImageForCss/login_1.jpg);
+        background-repeat: no-repeat;
+    }
+    .form-signin
+    {
+        max-width: 300px;
+        padding: 19px 29px 29px;
+        margin: 0 auto 20px;
+        background-color: #fff;
+        border: 1px solid #e5e5e5;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    }
+    .form-signin .form-signin-heading, .form-signin .checkbox
+    {
+        margin-bottom: 10px;
+    }
+    .form-signin input[type="text"], .form-signin input[type="password"]
+    {
+        font-size: 16px;
+        height: auto;
+        margin-bottom: 15px;
+        padding: 7px 9px;
+    }
+    .error
+    {
+        color: Red;
+    }
+</style>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div id="loginDiv" class="container">
+        <form id="loginForm" class="form-signin" action="@Utopia.UrlHelper.Instance().ChannelLoginPost()" method="post">
+        <h2 class="form-signin-heading">
+            乌托邦 Utopia</h2>
+        <label id="loginError" style="display: none" class="error">
+            用户名密码不匹配</label>
+        <label id="loginError2" style="display: none" class="error">
+            用户名或密码不能为空</label>
+        <input id="email" name="email" type="text" class="input-block-level" placeholder="电子邮箱" />
+        <input id="password" name="password" type="password" class="input-block-level" placeholder="密码" />
+        <label class="checkbox">
+            <input id="rememberme" name="rememberme" type="checkbox" value="true" />
+            记住我&nbsp;&nbsp;<span id="loginWarn" style="color: Red; display: none;">不建议在网吧等公共场所勾选此项</span>
+            <span id="logining" style="color: Red; display: none;">正在登录,请稍等...</span>
+        </label>
+        <button id="loginSubmit" class="btn btn-large btn-primary" type="submit">
+            登录</button>
+        <button id="loginRegister" class="btn btn-large" type="button">
+            现在就注册</button>
+        </form>
+    </div>
+    <div id="registerDiv" class="container" style="display: none">
+        <form id="registerForm" class="form-signin" action="@Utopia.UrlHelper.Instance().ChannelRegisterPost()" method="post">
+        <h2 class="form-signin-heading">
+            乌托邦 Utopia</h2>
+        <label id="registerError" style="color: Red; display: none" class="error">
+            该邮箱已存在</label>
+        <label id="registering" style="color: Red; display: none; margin-left: 5px;">
+            正在注册,请稍等...</label>
+        <input id="registerEmail" name="email" type="text" class="input-block-level" placeholder="电子邮箱" />
+        <input id="registerPassword" name="password" type="password" class="input-block-level"
+            placeholder="密码" />
+        <input id="username" name="username" type="text" class="input-block-level" placeholder="姓名" />
+        <label class="radio inline">
+            <input type="radio" name="sex" id="optionsRadios1" value="1" checked />
+            男
+        </label>
+        <label class="radio inline">
+            <input type="radio" name="sex" id="optionsRadios2" value="0" />
+            女
+        </label>
+        <br />
+        <br />
+        <button id="registerSubmit" class="btn btn-large btn-primary" type="submit">
+            注册</button>
+        <button id="registerBack" class="btn btn-large" type="button">
+            返回去登录</button>
+        </form>
+    </div>
+</body>
+</html>
+<script>
+    //背景图切换
+    var index = 2;
+    var recordInterval = setInterval(
+        function () {
+            index++;
+            if (index > 6) {
+                index = 1;
+            }
+            $("Body").css("background-image", "url(../../Content/ImageForCss/login_" + index + ".jpg)")
+        }, 10000);
+
+        $(function () {
+
+            //登录验证
+            $("#loginForm").validate({
+                rules: { email: { required: true, email: true, maxlength: 40 }, password: { required: true, minlength: 5, maxlength: 30} },
+                messages: { email: { required: "请输入电子邮箱", email: "请输入正确的电子邮箱", maxlength: jQuery.format("邮箱不能大于{0}个字符") },
+                    password: { required: "请输入密码", minlength: jQuery.format("密码不能小于{0}个字符"), maxlength: jQuery.format("密码不能大于{0}个字符") }
+                }
+            });
+
+            //点'登录'
+            $("#loginSubmit").click(function (e) {
+                e.preventDefault();
+                $("#loginWarn").hide();
+                $("#loginError").hide();
+                $("#loginError2").hide();
+                $("#logining").show();
+                if ($("#email").val() == "" || $("#password").val() == "") {
+                    $("#loginError2").show();
+                    $("#logining").hide();
+                    return;
+                }
+
+                $.post($("#loginForm").attr("action"), $("#loginForm").serialize(), function (data) {
+                    if (data == 0) {
+                        $("#loginError").show();
+                        $("#logining").hide();
+                    } else {
+                        window.location.href = '@(Utopia.UrlHelper.Instance().ChannelHome())' + "/" + data;
+                    }
+                })
+            })
+
+            //点'现在就注册'
+            $("#loginRegister").click(function () {
+                $("#loginDiv").slideUp(300);
+                $("#registerDiv").slideDown(300);
+            })
+
+            //点'注册'
+            $("#registerSubmit").click(function (e) {
+                e.preventDefault();
+                if ($('#registerForm').valid() == true) {
+                    $("#registerError").hide();
+                    $("#registering").show();
+                    $.post($("#registerForm").attr("action"), $("#registerForm").serialize(), function (data) {
+                        if (data == 0) {
+                            $("#registering").hide();
+                            $("#registerError").show();
+                        } else {
+                            window.location.href = '@(Utopia.UrlHelper.Instance().ChannelHome())' + "/" + data;
+                        }
+                    })
+                }
+            })
+
+            //注册验证
+            $("#registerForm").validate({
+                rules: { email: { required: true, email: true, maxlength: 40 }, password: { required: true, minlength: 5, maxlength: 30 }, username: { required: true, maxlength: 20} },
+                messages: { email: { required: "请输入电子邮箱", email: "请输入正确的电子邮箱", maxlength: jQuery.format("邮箱不能大于{0}个字符") },
+                    password: { required: "请输入密码", minlength: jQuery.format("密码不能小于{0}个字符"), maxlength: jQuery.format("密码不能大于{0}个字符") },
+                    username: { required: "请输入姓名", maxlength: jQuery.format("姓名不能大于{0}个字符") }
+                }
+            });
+
+            //点'返回去登录'
+            $("#registerBack").click(function () {
+                $("#loginDiv").slideDown(300);
+                $("#registerDiv").slideUp(300);
+            })
+
+            //点'记住我'
+            $("#rememberme").click(function () {
+                if ($(this)[0].checked == true)
+                    $("#loginWarn").show();
+                else
+                    $("#loginWarn").hide();
+            })
+
+        })
+
+</script>

@@ -1,0 +1,229 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <style type="text/css">
+        #scrollUp
+        {
+            bottom: 20px;
+            right: 20px;
+            height: 38px;
+            width: 38px;
+            background: url("../../Content/ImageForCss/top.png") no-repeat;
+        }
+        .footer
+        {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 30px;
+            border-top: 1px solid #E5E5E5;
+            background-color: whiteSmoke;
+        }
+         .button:hover
+        {
+            cursor:pointer;
+            text-decoration:none;
+            color:White;
+        }
+    </style>
+    <script>
+        
+    </script>
+    <link href="@Url.Content("~/Content/Bootstrap/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Bootstrap/bootstrap-responsive.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/artDialog/skins/twitter.css")" rel="stylesheet" type="text/css" />
+     <link href="@Url.Content("~/Content/Bootstrap/Buttons/buttons.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Bootstrap/Buttons/font-awesome.min.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/Bootstrap/jquery-1.9.1.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Bootstrap/bootstrap.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/artDialog/jquery.artDialog.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/artDialog/jquery.artDialog.iframeTools.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/myjQueryPlugin/jquery.myPlugin.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/myjQueryPlugin/jquery.scrollto.js")" type="text/javascript"></script>
+</head>
+@{
+    string headerSelected = ViewData["headerSelected"] == null ? string.Empty : ViewData["headerSelected"].ToString();
+    long currentUserId = Utopia.UserContext.CurrentUser.UserId;
+    string homeUrl = "/Home/" + currentUserId;
+    string keyword = ViewBag.keyword;
+}
+<body style="padding-top:48px;">
+    <a id="top" style="display: none;"></a>
+    <bgsound loop="-1" id="bgs" src="" />
+    <audio controls="controls" id="audio_player" style="display: none;">
+      <source src="../../Content/music/tishiyin/newMessage2.wav" >
+    </audio>
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner" style="padding-left: 70px; padding-right: 70px;">
+            <a class="brand" href="@homeUrl">乌托邦 Utopia</a>
+            <ul class="nav">
+                <li @if (headerSelected == "Home")
+                    {<text>class="active"</text>}><a href="@homeUrl">首页</a></li>
+                <li @if (headerSelected == "dc")
+                    {<text>class="active"</text>}><a href="#">订餐</a></li>
+                <li @if (headerSelected == "xmb")
+                    {<text>class="active"</text>}><a href="#">小卖部</a></li>
+                <li @if (headerSelected == "tnhy")
+                    {<text>class="active"</text>}><a href="#">童年回忆</a></li>
+            </ul>
+            <ul class="nav pull-right">
+                <li>
+                    <img id="coffeeEmail" url="到消息页面" title="消息" style="width: 40px; height: 40px; cursor: pointer;"
+                        src="../../Content/ImageForCss/Coffee.png" />
+                    <img id="newEmail" url="@Utopia.UrlHelper.Instance()._Message()" title="新消息" style="width:40px; height:40px; display:none;cursor:pointer;" src="../../Content/ImageForCss/www_53tu_com.gif" />
+                </li>
+                <li class="divider-vertical"></li>
+                <li>
+                    <form action="@Utopia.UrlHelper.Instance().SearchResult()" method="post" class="navbar-form form-search">
+                    <div class="input-append">
+                        <input name="keyword" type="text" class="search-query" placeholder="商品、店铺、美食、吐槽" autocomplete = "off" value="@keyword" />
+                        <button type="submit" class="btn">
+                            搜索</button>
+                    </div>
+                    </form>
+                </li>
+                <li class="divider-vertical"></li>
+                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">帐号 <b
+                    class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="">
+                            <img class="img-rounded" src="http://tp1.sinaimg.cn/1834443804/180/5608970101/1"
+                                width="40" height="40" alt="乌托邦">
+                            @Utopia.UserContext.CurrentUser.Username
+                        </a></li>
+                        <li><a href="">编辑个人资料</a></li>
+                        <li><a href="">其他待考虑项</a></li>
+                        <li class="divider"></li>
+                        <li><a id="loginOut" href="@Utopia.UrlHelper.Instance().ChannelLoginOut()">退出</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div style=" margin-left:40px; margin-right:40px;" class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <!--Body content-->
+                @RenderBody()
+            </div>
+            @* <div class="span2">
+                <!--Sidebar content--暂且不加-->
+             @RenderSection("SideB",false)
+            </div>*@
+        </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <div>
+            <span style="font-size:1em; margin-right:20px;" class="muted pull-left">Powered by Utopia 1.0</span>
+            <span style="font-size:0.8em; margin-right:20px;" class="muted pull-left">Copyright © 2013 乌托邦</span>
+             <span class="muted pull-left">鲁ICP备09073340号</span>
+        </div>
+        <br /><br />
+        <div>
+           <span class="pull-left">
+              <a href=""><img class="img-circle" src="http://tp1.sinaimg.cn/1834443804/180/5608970101/1" width="25" height="25" alt="乌托邦"></a>
+           </span>&nbsp;
+            <span style=" font-size:large;" class="muted pull-left">&nbsp;:&nbsp;“ 我的意思是,故事可能很无聊,不是吗?我们只是在电脑面前坐了2年,写了2年的代码。有事咱们可以</span>
+             <span class="pull-left"><a target="_blank" href="http://wpa.qq.com/msgrd?V=1&amp;Uin=329902077">  
+            <img style=" height:25px;" alt="点击这里给我发消息" src="http://wpa.qq.com/pa?p=1:329902077:7" /></a></span>
+            <span style=" font-size:large;" class="muted pull-left">一下,或者<a href="@Utopia.UrlHelper.Instance().ChannelMicroblogDetail(229)">给我留言</a>。”</span>
+        </div>
+     </div>
+    </footer>
+    <a id="scrollUp" style="position: fixed; z-index: 2147483647; display: block; cursor: pointer;
+        display: none;"></a>
+</body>
+</html>
+<script>
+
+    $(function () {
+
+        //退出
+        $("#loginOut").click(function (e) {
+            e.preventDefault();
+            $.post($(this).attr("href"), function () {
+                window.location = '@(Utopia.UrlHelper.Instance().ChannelLoginGet())';
+            });
+        })
+
+        //点消息图标
+        $("#coffeeEmail").click(function () {
+            var url = $(this).attr("url");
+            window.location.href = url;
+        })
+        $("#newEmail").click(function () {
+            $("#coffeeEmail").show();
+            $("#newEmail").hide();
+            var url = $(this).attr("url");
+            art.dialog.load(url, { title: '我未处理的消息', lock: true, left: '30%', top: '10%', fixed: true }, false);
+        })
+
+        //回到顶部
+        $(window).scroll(function () {
+            var aToTop = $(document).scrollTop();
+            if (aToTop > 500)
+                $("#scrollUp").show();
+            else
+                $("#scrollUp").hide();
+        })
+        $("#scrollUp").click(function () {
+            $("#top").ScrollTo(500);
+        })
+
+    })
+
+    //查询有无最新消息
+    newMessageSlt = setInterval("hasNewMessage()", 120000);
+    function hasNewMessage() {
+        var url = '@Utopia.UrlHelper.Instance().IsHasNewMessage()';
+        var newMessageId = getCookie("newMessageId");
+        $.post(url, { newMessageId: newMessageId }, function (data) {
+            if (data == 1) {
+                $("#coffeeEmail").hide();
+                $("#newEmail").show();
+                //js提示音
+                if (Sys.ie) {
+                    if ($("#bgs").attr("src") == "") {
+                        $("#bgs").attr("src", "../../Content/music/tishiyin/newMessage2.wav");
+                    }
+                }
+                if (Sys.chrome) {
+                    $("#audio_player")[0].play();
+                }
+            } else {
+                $("#coffeeEmail").show();
+                $("#newEmail").hide();
+            }
+        })
+    }
+
+    //获取cookie
+    function getCookie(c_name) {
+        if (document.cookie.length > 0) {
+            c_start = document.cookie.indexOf(c_name + "=")
+            if (c_start != -1) {
+                c_start = c_start + c_name.length + 1
+                c_end = document.cookie.indexOf(";", c_start)
+                if (c_end == -1) c_end = document.cookie.length
+                return unescape(document.cookie.substring(c_start, c_end))
+            }
+        }
+        return "0"
+    }
+
+    //浏览器类型
+    var Sys = {};
+    var ua = navigator.userAgent.toLowerCase();
+    if (window.ActiveXObject)
+        Sys.ie = ua.match(/msie ([\d.]+)/)[1]
+    else if (document.getBoxObjectFor)
+        Sys.firefox = ua.match(/firefox\/([\d.]+)/)[1]
+    else if (window.MessageEvent && !document.getBoxObjectFor)
+        Sys.chrome = ua.match(/chrome\/([\d.]+)/)[1]
+    else if (window.opera)
+        Sys.opera = ua.match(/opera.([\d.]+)/)[1]
+    else if (window.openDatabase)
+        Sys.safari = ua.match(/version\/([\d.]+)/)[1];
+
+</script>

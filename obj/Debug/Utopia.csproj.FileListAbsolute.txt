@@ -1,0 +1,12 @@
+D:\乌托邦\Utopia\Utopia\obj\Debug\ResolveAssemblyReference.cache
+D:\乌托邦\Utopia\Utopia\bin\Utopia.dll
+D:\乌托邦\Utopia\Utopia\bin\Utopia.pdb
+D:\乌托邦\Utopia\Utopia\bin\EntityFramework.dll
+D:\乌托邦\Utopia\Utopia\bin\LuceneSearch.dll
+D:\乌托邦\Utopia\Utopia\bin\PanGu.dll
+D:\乌托邦\Utopia\Utopia\bin\PanGu.HighLight.dll
+D:\乌托邦\Utopia\Utopia\bin\PanGu.Lucene.Analyzer.dll
+D:\乌托邦\Utopia\Utopia\bin\EntityFramework.xml
+D:\乌托邦\Utopia\Utopia\bin\LuceneSearch.pdb
+D:\乌托邦\Utopia\Utopia\obj\Debug\Utopia.dll
+D:\乌托邦\Utopia\Utopia\obj\Debug\Utopia.pdb

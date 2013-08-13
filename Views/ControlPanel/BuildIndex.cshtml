@@ -1,0 +1,24 @@
+﻿@using Utopia;
+@{
+    ViewBag.Title = "BuildIndex";
+    Layout = "~/Views/Shared/_ControlPanelLayout.cshtml";
+}
+
+<h2>BuildIndex</h2>
+<form id="buildIndexForm"  action="" method="post">
+<input id="tuCaoBtn" url="@Utopia.UrlHelper.Instance().ControlPanelBuildIndexTuCao()" type="button" value="重建吐槽索引" />
+</form>
+<script>
+
+    $(function () {
+
+        //重建吐槽索引
+        $("#tuCaoBtn").click(function () {
+            url = $(this).attr("url");
+            $("#buildIndexForm").attr("action", url);
+            $("#buildIndexForm").submit();
+        })
+
+    })
+
+</script>

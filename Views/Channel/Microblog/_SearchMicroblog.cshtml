@@ -1,0 +1,57 @@
+﻿@using Utopia;
+@using Utopia.Models;
+@using LuceneSearch;
+@model List<Uto_Microblog>
+@{
+    string keyword = ViewBag.keyword;
+    int totalRecord = ViewBag.totalRecord;
+    string totalTime = ViewBag.totalTime;
+    }
+<div id="searchTuCaoDiv" class="well sidebar-nav" style="padding-top: 20px; padding-left: 40px;padding-right: 40px;">
+<blockquote>
+  <p><a href="http://lucene.apache.org/" target="_blank"> Lucene</a> 总共搜索到了 @totalRecord 条与 @keyword 相关的吐槽. </p>
+  <small>这次搜索耗时  <cite title="Source Title">@totalTime  秒</cite></small>
+</blockquote>
+ @foreach (var microblog in Model)
+ {
+   <div class="hero-unit well sidebar-nav" style="padding-top: 20px; padding-left: 40px; padding-right: 40px;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="height: 100%; width: 10%; margin-right: 20; vertical-align: top;">
+                    <a href="#">
+                        <img class="img-rounded" src="http://tp1.sinaimg.cn/1834443804/180/5608970101/1"
+                            width="50" height="50" alt="乌托邦">
+                    </a>
+                </td>
+                <td class="hasImgtd" style="height: 100%; width: 90%; word-break: break-all; word-wrap: break-word;">
+                    <span class="myUserNameSpan" style="font-weight: 900;">@(microblog.AsMicroblog().MicroBlogUser.Username)</span>
+                    @if (microblog.RepeatId > 0)
+                    {<span>@Html.Raw(microblog.RepeatContent)</span>}
+                    <input type="hidden" class="myUserIdHidden" value="@microblog.UserId" />
+                    <input type="hidden" class="myRepeatContentHidden" value="@microblog.FrontRepeatContent()" />
+                    <div class="myWordDiv">
+                    @if (microblog.RepeatId > 0)
+                    {
+                        var oriUser = microblog.AsMicroblog().OriMicroBlogUser;
+                        <a target="_blank" href="/Home/@oriUser.UserId">@oriUser.Username:</a>}
+                    @Html.Raw(LuceneIndex.HighLight(keyword, microblog.Body, 350))                                                                     
+                    </div>
+                </td>
+            </tr>
+            <tr>
+            <td></td>
+            <td>
+             <a href="@Utopia.UrlHelper.Instance().ChannelMicroblogDetail(microblog.MicroblogId)" class="button glow button-rounded button-flat-primary pull-right">详情</a>
+            </td>
+            </tr>
+        </table>
+   </div>
+ }
+ @{
+     List<string> paramNames = new List<string>();
+     paramNames.Add("keyword");
+     List<object> paramValues = new List<object>();
+     paramValues.Add(keyword);
+     }
+ @Html.Pagination("_SearchMicroblog", "Channel", totalRecord, 4, ajaxTarget: "searchTuCaoDiv", paramNames: paramNames, paramValues: paramValues)
+</div>

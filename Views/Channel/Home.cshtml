@@ -1,0 +1,25 @@
+﻿@using Utopia;
+@{
+    ViewBag.Title = "乌托邦-" + ViewBag.userName;
+    Layout = "~/Views/Shared/_ChannelLayout.cshtml";
+}
+@section SideA{
+    @Html.Action("_ChannelUserInfo", "Channel")
+    <div class="well sidebar-nav">
+        <ul style="" class="nav nav-list">
+            <li class="nav-header">我发布的内容</li>
+            <li class="active"><a href="#">我吐de槽</a></li>
+            <li><a href="#">我de小卖部</a></li>
+            <li><a href="#">我订de饭</a></li>
+            <li><a href="#">我分享de童年回忆</a></li>
+            <li class="nav-header">我好朋友们发布的内容</li>
+            <li class=""><a href="#">TA们吐de槽</a></li>
+            <li><a href="#breadcrumbs">TA们在卖de东西</a></li>
+            <li><a href="#pagination">TA们订de饭</a></li>
+            <li><a href="#labels-badges">TA们分享de童年回忆</a></li>
+        </ul>
+    </div>
+}
+<div id="homeRight">
+@Html.Action("_HomeRight", "Channel", new { urlUserId=Url.UrlUser().UserId })
+</div>

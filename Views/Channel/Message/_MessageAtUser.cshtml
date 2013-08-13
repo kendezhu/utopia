@@ -1,0 +1,36 @@
+﻿@using Utopia;
+@model List<Utopia.Models.Message>
+@{
+    long newMessageId = Model.Count > 0 ? Model.First().MessageId : 0;
+    }  
+@if (Model != null && Model.Count > 0)
+{
+<input type="hidden" class="newMessageId" value="@newMessageId" />
+<table class="table table-hover">
+    <tbody>
+        <tr>
+        <th>
+        @@我的消息
+        </th>
+        <th>
+        <a href="#" class="pull-right">更多</a>
+        </th>
+        </tr>
+        @foreach (var message in Model)
+        {
+         <tr class="tr-@message.MessageId">
+            <td>
+              @{
+            string body = ((Uto_Microblog)message.BelongItem).Body;
+            body = Utility.GetStr(body, 50);
+                }
+              <a target="_blank" href="@(Utopia.UrlHelper.Instance().ChannelHome() + "/" + message.SendUser.UserId.ToString())">@message.SendUser.Username</a> 在吐槽 <a href="" target="_blank">@(body)</a> 中提到了你
+            </td>
+            <td>
+            <button class="close">&times;</button>
+            </td>
+        </tr>   
+        }
+    </tbody>
+</table>
+}

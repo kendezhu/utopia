@@ -1,0 +1,22 @@
+﻿@{
+    Utopia.Uto_User user = ViewBag.User;
+    }
+<div class="well sidebar-nav" id="ChannelUserInfo" style="text-align:center;">
+    <dl style=" margin:10px;">
+        <dt><a href="#">
+            <img class="img-circle" src="http://tp1.sinaimg.cn/1834443804/180/5608970101/1" width="140"
+                height="140" alt="乌托邦">
+        </a></dt>
+        <dt style=" margin-top:5px; margin-bottom:3px;">
+            <a href="#" title="@user.Username">@user.Username</a>
+        </dt>
+       @* <dt>
+            <span style="line-height:15px; font-weight:bolder;font-size:small;height:15px;" class="badge badge-inverse">登录了100次</span>
+        </dt>*@
+    </dl>
+    <ul class="inline">
+        <li><a href="#"><span class="label label-success"><strong>605</strong><span>关注</span></span></a> </li>
+        <li><a href="#"><span class="label label-important"><strong>72</strong><span>粉丝</span></span></a> </li>
+        <li><a href="#"><span class="label label-info"><strong>86</strong><span>内容</span></span></a> </li>
+    </ul>
+</div>

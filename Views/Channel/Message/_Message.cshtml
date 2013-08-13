@@ -1,0 +1,56 @@
+﻿@using Utopia;
+@{
+    long currentUserId=UserContext.CurrentUser.UserId;
+    }
+<div id="newMessageDiv"></div>
+<script>
+    $(function () {
+        //关闭提示音
+        //Sys对象位于_ChannelLayout.cshtml
+        if (Sys.chrome) {
+            $("#audio_player")[0].pause();
+        }
+        $("#bgs").attr("src", "");
+
+        //at用户消息页
+        var url1 = '@(Utopia.UrlHelper.Instance()._MessageAtUser(currentUserId))';
+        $.get(url1, function (data) {
+            $("#newMessageDiv").append(data);
+        })
+
+        //吐槽回复消息页
+        var url2 = '@(Utopia.UrlHelper.Instance()._MessageMicroblogComment(currentUserId))';
+        $.get(url2, function (data) {
+            $("#newMessageDiv").append(data);
+        })
+
+    })
+
+    //客户端每1秒得到一次最新消息的ID
+    maxMessageSlt = setInterval("getNewMessageId()", 1000);
+    function getNewMessageId() {
+        var newMessageId = 0;
+        $(".newMessageId").each(function () {
+            var currentId = $(this).val();
+            if (currentId > newMessageId) {
+                newMessageId = currentId;
+            }
+        })
+        if ($(".newMessageId").length > 0) {
+            //将最新messageId添加到cookie中
+            setCookie("newMessageId", newMessageId);
+            //将最新的一条标记为红色背景
+            $("tr[class=tr-" + newMessageId + "]").css("background-color", "#FFCCCC");    
+        } else {
+            clearInterval(maxMessageSlt);
+        }
+    }
+
+    //添加cookie
+    var setCookie = function (c_name, value, expiredays) {
+        var exdate = new Date()
+        exdate.setDate(exdate.getDate() + expiredays)
+        cookieVal = c_name + "=" + escape(value) + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+        document.cookie = cookieVal;
+    }
+</script>
